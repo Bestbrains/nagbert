@@ -84,8 +84,7 @@ function askMessageToNagAbout(response, convo) {
 function askDeadline(response, convo) {
     convo.ask(messages.askDeadline, (response, convo) => {
         let dateResponse = convo.extractResponse(messages.askDeadline)
-
-        if (bot.utterances.no || validDate(dateResponse)) {
+        if (dateResponse.match(bot.utterances.no) || validDate(dateResponse)) {
             recapOptions(response, convo)
         } else {
             askDeadline(response, convo)
