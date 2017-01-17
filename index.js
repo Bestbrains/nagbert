@@ -20,7 +20,6 @@ const bot = controller.spawn({
 }).startRTM()
 
 controller.hears(['hello', 'hi'], 'direct_message,direct_mention,mention', (bot, message) => {
-
     bot.api.reactions.add({
         timestamp: message.ts,
         channel: message.channel,
@@ -78,17 +77,20 @@ function askMessageToNagAbout(response, convo) {
 
 function askDeadline(response, convo) {
     convo.ask('Do you have a deadline? (DD/MM/YY | No)', (response, convo) => {
-
-        // if(response.toLowerCase() == "no" || response.toLowerCase() == "n") {
-        //   convo.say("That's okay, I'll keep nagging until it's done or you stop me")
-        //
-        // } else {
-        //   convo.say("Great, I'll keep nagging until the deadline has been met")
-        // }
-        convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
-        convo.say('I\'m sure I\'ll learn soon enough. Thanks for trying me out!')
+        recapOptions(response, convo)
         convo.next()
     })
+}
+
+
+function recapOptions(response, convo) {
+  let values = convo.extractResponses()
+  // Values are extracted with the questions as keys
+  convo.ask("Does this information look right to you? (Y/n)" + require('util').inspect(values, { depth: null }), (response, convo) => {
+      convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
+      convo.say('I\'m sure I\'ll learn soon enough. Thanks for trying me out!')
+      convo.next()
+  })
 }
 
 function formatUptime(uptime) {
