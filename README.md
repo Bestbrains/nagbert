@@ -28,9 +28,9 @@ Service is for now intended to be deployed by you, somewhere you control.
 
 # TODO
 
-~1. Extract responses from conversation steps~
+1. ~~Extract responses from conversation steps~~
 2. React according to responses
-~3. Repeat back the settings to the user starting the nag~
+3. ~~Repeat back the settings to the user starting the nag~~
 4. Make confirm Y/n buttons
 5. Save a finalized nagging topic to team level json storage'
 
