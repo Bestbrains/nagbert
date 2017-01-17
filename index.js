@@ -83,13 +83,13 @@ function askDeadline(response, convo) {
 }
 
 function recapOptions(response, convo) {
-  let values = convo.extractResponses()
-  // Values are extracted with the questions as keys
-  convo.ask("Does this information look right to you? (Y/n)" + require('util').inspect(values, { depth: null }), (response, convo) => {
-      convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
-      convo.say('I\'m sure I\'ll learn soon enough. Thanks for trying me out!')
-      convo.next()
-  })
+    let values = convo.extractResponses()
+    // Values are extracted with the questions as keys
+    convo.ask('Does this information look right to you? (Y/n)' + require('util').inspect(values, { depth: null }), (response, convo) => {
+        convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
+        convo.say('I\'m sure I\'ll learn soon enough. Thanks for trying me out!')
+        convo.next()
+    })
 }
 
 function formatUptime(uptime) {
