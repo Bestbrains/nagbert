@@ -83,27 +83,37 @@ function askMessageToNagAbout(response, convo) {
 
 function askDeadline(response, convo) {
     convo.ask(messages.askDeadline, (response, convo) => {
-        recapOptions(response, convo)
+        let dateResponse = convo.extractResponse(messages.askDeadline)
+
+        if (bot.utterances.no || validDate(dateResponse)) {
+            recapOptions(response, convo)
+        } else {
+            askDeadline(response, convo)
+        }
         convo.next()
     })
 }
 
-function recapOptions(response, convo) {
-  let values = convo.extractResponses()
+function validDate(date) {
+    return false
+}
 
-  // Values are extracted with the questions as keys
-  convo.say('I should nag: ' + values[messages.askUsersToNag])
-  convo.say('I should ask them about: ' + values[messages.askMessageToNagAbout])
-  if(values[messages.askDeadline].toLowerCase() == 'no') {
-      convo.say('There is no deadline')
-  } else {
-      convo.say('The deadline is: ' + values[messages.askDeadline])
-  }
-  convo.ask(messages.recapOptions, (response, convo) => {
-      convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
-      convo.say('I\'m sure I\'ll learn soon enough. Thanks for trying me out!')
-      convo.next()
-  })
+function recapOptions(response, convo) {
+    let values = convo.extractResponses()
+
+    // Values are extracted with the questions as keys
+    convo.say('I should nag: ' + values[messages.askUsersToNag])
+    convo.say('I should ask them about: ' + values[messages.askMessageToNagAbout])
+    if (values[messages.askDeadline].toLowerCase() == 'no') {
+        convo.say('There is no deadline')
+    } else {
+        convo.say('The deadline is: ' + values[messages.askDeadline])
+    }
+    convo.ask(messages.recapOptions, (response, convo) => {
+        convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
+        convo.say('I\'m sure I\'ll learn soon enough. Thanks for trying me out!')
+        convo.next()
+    })
 }
 
 function formatUptime(uptime) {
