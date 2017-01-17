@@ -30,9 +30,10 @@ Service is for now intended to be deployed by you, somewhere you control.
 
 ~1. Extract responses from conversation steps~
 2. React according to responses
-3. Repeat back the settings to the user starting the nag, and make confirm y/n buttons
-4. Save a finalized nagging topic to team level json storage'
+~3. Repeat back the settings to the user starting the nag~
+4. Make confirm Y/n buttons
+5. Save a finalized nagging topic to team level json storage'
 
-5. Make a scheduled job with the nagging topics
-6. Start conversation with nagees and notify the nagger who has been nagged
-7. Make confirm y/n buttons for nagees to let nagbert know they've completed their task.
+6. Make a scheduled job with the nagging topics
+7. Start conversation with nagees and notify the nagger who has been nagged
+8. Make confirm y/n buttons for nagees to let nagbert know they've completed their task.
