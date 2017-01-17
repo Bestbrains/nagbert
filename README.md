@@ -7,6 +7,13 @@ Let Nagbert do it. He'll regularly follow up, and let you know when everyone has
 
 Run command "npm run start" to run the bot
 
+## Commands
+
+Nagbert responds to the following commands in slack:
+
+*Hi* - Nagbert will introduce himself and display a list of commands
+*nag* - Nagbert will initiate a conversation to begin a nagging topic
+
 # Token
 
 This service expects a _secret.json file with the following structure
