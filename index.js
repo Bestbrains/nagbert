@@ -60,7 +60,7 @@ controller.hears(['nag'], 'direct_message,direct_mention,mention', (bot, message
 })
 
 const messages = {
-    askUsersToNag: 'Who would you like me to nag? Tag them and separate by commas (i.e. @Superman,@Batman)',
+    askUsersToNag: 'Who would you like me to nag? Tag them here (i.e. @Superman @Batman)',
     askMessageToNagAbout: 'What would you like me to nag them about?',
     askDeadline: 'Do you have a deadline? (DD/MM/YYYY | No)',
     recapOptions: 'Does this information look right to you? (Y/n)'
@@ -68,9 +68,17 @@ const messages = {
 
 function askUsersToNag(response, convo) {
     convo.ask(messages.askUsersToNag, (response, convo) => {
-        convo.say('Noted.');
-        askMessageToNagAbout(response, convo);
-        convo.next();
+        let users = convo.extractResponse(messages.askUsersToNag)
+
+        if (!validUserSequence(users)) {
+            convo.say("Are you sure you tagged the users?")
+            convo.repeat()
+        } else {
+            convo.say('Will nag: ' + humanReadableUserList(users));
+
+            askMessageToNagAbout(response, convo);
+        }
+        convo.next()
     });
 }
 
@@ -108,13 +116,32 @@ function humanReadableDate(dateString) {
     return parseDate(dateString).format('DD MMM YYYY')
 }
 
+function validUserSequence(users) {
+    return getUsers(users) !== null
+}
+
+function getUsers(users) {
+    let regex = /<@[\d\w]+>/g
+    let matches = users.match(regex)
+
+    return matches
+}
+
+function humanReadableUserList(users) {
+    let userlist = getUsers(users)
+    if(userlist === null) {
+        return ''
+    }
+    return userlist.join(', ')
+}
+
 function recapOptions(response, convo) {
     let values = convo.extractResponses()
 
     // Values are extracted with the questions as keys
-    convo.say('I should nag: ' + values[messages.askUsersToNag])
+    convo.say('I should nag: ' + humanReadableUserList(values[messages.askUsersToNag]))
     convo.say('I should ask them about: ' + values[messages.askMessageToNagAbout])
-    if (values[messages.askDeadline].toLowerCase() == 'no') {
+    if (values[messages.askDeadline].match(bot.utterances.no)) {
         convo.say('There is no deadline')
     } else {
         convo.say('The deadline is: ' + humanReadableDate(values[messages.askDeadline]))
