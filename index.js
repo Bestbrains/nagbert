@@ -82,7 +82,6 @@ function askDeadline(response, convo) {
     })
 }
 
-
 function recapOptions(response, convo) {
   let values = convo.extractResponses()
   // Values are extracted with the questions as keys
