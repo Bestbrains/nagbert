@@ -1,0 +1,32 @@
+{
+  "name": "nagbert",
+  "version": "0.0.1",
+  "description": "Nag people from your team for a decision or action on something.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bestbrains/nagbert.git"
+  },
+  "keywords": [
+    "slack",
+    "bot",
+    "npm",
+    "ES6",
+    "node",
+    "nag",
+    "organisation",
+    "productivity"
+  ],
+  "author": "bestbrains",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bestbrains/nagbert/issues"
+  },
+  "homepage": "https://github.com/Bestbrains/nagbert#readme",
+  "dependencies": {
+    "botkit": "^0.4.1"
+  }
+}
