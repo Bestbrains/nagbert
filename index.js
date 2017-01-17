@@ -58,9 +58,15 @@ controller.hears(['nag'], 'direct_message,direct_mention,mention', (bot, message
     bot.startConversation(message, askUsersToNag)
 })
 
+const messages = {
+    askUsersToNag: 'Who would you like me to nag? Tag them and separate by commas (i.e. @Superman,@Batman)',
+    askMessageToNagAbout: 'What would you like me to nag them about?',
+    askDeadline: 'Do you have a deadline? (DD/MM/YY | No)',
+    recapOptions: 'Does this information look right to you? (Y/n)'
+}
 
 function askUsersToNag(response, convo) {
-    convo.ask('Who would you like me to nag? Tag them and separate by commas (i.e. @Superman,@Batman)', (response, convo) => {
+    convo.ask(messages.askUsersToNag, (response, convo) => {
         convo.say('Noted.');
         askMessageToNagAbout(response, convo);
         convo.next();
@@ -68,7 +74,7 @@ function askUsersToNag(response, convo) {
 }
 
 function askMessageToNagAbout(response, convo) {
-    convo.ask('What would you like me to nag them about?', function(response, convo) {
+    convo.ask(messages.askMessageToNagAbout, function(response, convo) {
         convo.say('Noted.')
         askDeadline(response, convo);
         convo.next();
@@ -76,20 +82,28 @@ function askMessageToNagAbout(response, convo) {
 }
 
 function askDeadline(response, convo) {
-    convo.ask('Do you have a deadline? (DD/MM/YY | No)', (response, convo) => {
+    convo.ask(messages.askDeadline, (response, convo) => {
         recapOptions(response, convo)
         convo.next()
     })
 }
 
 function recapOptions(response, convo) {
-    let values = convo.extractResponses()
-    // Values are extracted with the questions as keys
-    convo.ask('Does this information look right to you? (Y/n)' + require('util').inspect(values, { depth: null }), (response, convo) => {
-        convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
-        convo.say('I\'m sure I\'ll learn soon enough. Thanks for trying me out!')
-        convo.next()
-    })
+  let values = convo.extractResponses()
+
+  // Values are extracted with the questions as keys
+  convo.say('I should nag: ' + values[messages.askUsersToNag])
+  convo.say('I should ask them about: ' + values[messages.askMessageToNagAbout])
+  if(values[messages.askDeadline].toLowerCase() == 'no') {
+      convo.say('There is no deadline')
+  } else {
+      convo.say('The deadline is: ' + values[messages.askDeadline])
+  }
+  convo.ask(messages.recapOptions, (response, convo) => {
+      convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
+      convo.say('I\'m sure I\'ll learn soon enough. Thanks for trying me out!')
+      convo.next()
+  })
 }
 
 function formatUptime(uptime) {
