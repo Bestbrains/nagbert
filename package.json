@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/Bestbrains/nagbert#readme",
   "dependencies": {
-    "botkit": "^0.4.1"
+    "botkit": "^0.4.1",
+    "moment": "^2.17.1"
   }
 }

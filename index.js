@@ -9,6 +9,7 @@ if (!secret.token) {
 
 const Botkit = require('botkit')
 const os = require('os')
+const moment = require('moment')
 
 const controller = Botkit.slackbot({
     debug: true,
@@ -61,7 +62,7 @@ controller.hears(['nag'], 'direct_message,direct_mention,mention', (bot, message
 const messages = {
     askUsersToNag: 'Who would you like me to nag? Tag them and separate by commas (i.e. @Superman,@Batman)',
     askMessageToNagAbout: 'What would you like me to nag them about?',
-    askDeadline: 'Do you have a deadline? (DD/MM/YY | No)',
+    askDeadline: 'Do you have a deadline? (DD/MM/YYYY | No)',
     recapOptions: 'Does this information look right to you? (Y/n)'
 }
 
@@ -93,8 +94,18 @@ function askDeadline(response, convo) {
     })
 }
 
+let today = moment().startOf('day')
 function validDate(date) {
-    return false
+    let deadline = parseDate(date)
+    return deadline.isValid() && deadline.endOf('day').isAfter(today)
+}
+const dateFormats = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY']
+function parseDate(dateString) {
+    return moment(dateString, dateFormats, true)
+}
+
+function humanReadableDate(dateString) {
+    return parseDate(dateString).format('DD MMM YYYY')
 }
 
 function recapOptions(response, convo) {
@@ -106,7 +117,7 @@ function recapOptions(response, convo) {
     if (values[messages.askDeadline].toLowerCase() == 'no') {
         convo.say('There is no deadline')
     } else {
-        convo.say('The deadline is: ' + values[messages.askDeadline])
+        convo.say('The deadline is: ' + humanReadableDate(values[messages.askDeadline]))
     }
     convo.ask(messages.recapOptions, (response, convo) => {
         convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
