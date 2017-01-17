@@ -63,7 +63,7 @@ const messages = {
     askUsersToNag: 'Who would you like me to nag? Tag them here (i.e. @Superman @Batman)',
     askMessageToNagAbout: 'What would you like me to nag them about?',
     askDeadline: 'Do you have a deadline? (DD/MM/YYYY | No)',
-    recapOptions: 'Does this information look right to you? (Y/n)'
+    recapOptions: 'Does this information look right to you? (Yes/no)'
 }
 
 function askUsersToNag(response, convo) {
@@ -96,6 +96,7 @@ function askDeadline(response, convo) {
         if (dateResponse.match(bot.utterances.no) || validDate(dateResponse)) {
             recapOptions(response, convo)
         } else {
+            convo.say('Please ensure the date is valid and set in the future. Today is: ' + humanReadableDate(today))
             askDeadline(response, convo)
         }
         convo.next()
@@ -147,8 +148,16 @@ function recapOptions(response, convo) {
         convo.say('The deadline is: ' + humanReadableDate(values[messages.askDeadline]))
     }
     convo.ask(messages.recapOptions, (response, convo) => {
-        convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
-        convo.say('I\'m sure I\'ll learn soon enough. Thanks for trying me out!')
+        let answer = convo.extractResponse(messages.recapOptions)
+        if(answer.match(bot.utterances.no)) {
+            convo.say("Alright. I won't start nagging just yet. Say 'nag' to go through this process again with your changes.")
+        } else if (answer.match(bot.utterances.yes)){
+            convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
+            convo.say('I\'m sure I\'ll learn soon enough. Thanks for trying me out!')
+        } else {
+            convo.say('I\'m sorry, I didn\'t quite get that. Please speak in simpler terms.')
+            convo.repeat()
+        }
         convo.next()
     })
 }
