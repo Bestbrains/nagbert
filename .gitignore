@@ -38,3 +38,6 @@ jspm_packages
 
 # Secret token file
 _secret.json
+
+# Json file store
+topics/*
