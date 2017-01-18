@@ -1,6 +1,7 @@
 'use strict'
 
 const secret = require('./_secret.json')
+const uuid = require('uuid/v4')
 
 if (!secret.token) {
     console.log('Error: Specify token in json file _secret')
@@ -13,7 +14,8 @@ const moment = require('moment')
 
 const controller = Botkit.slackbot({
     debug: true,
-    stats_optout: true
+    stats_optout: true,
+    json_file_store: './topics'
 })
 
 const bot = controller.spawn({
@@ -55,8 +57,27 @@ controller.hears(['uptime', 'identify yourself', 'who are you', 'what is your na
     })
 
 controller.hears(['nag'], 'direct_message,direct_mention,mention', (bot, message) => {
-    bot.reply(message, 'Great! I can\'t wait to get started.')
-    bot.startConversation(message, askUsersToNag)
+    bot.reply(message, 'Great! I can\'t wait to get started. Let me just get a pen...')
+    bot.createConversation(message, (response, convo) => {
+        Promise.all([getUserData(message.user), getTeamData(message.team)])
+        .then((values) => {
+            convo.setVar('userData', values[0] || { id: message.user, topics: []})
+            convo.setVar('teamData', values[1] || { id: message.team, topics: []})
+            convo.activate()
+        }).catch((err) => {
+            // bot.reply(message, 'Sorry, I couldn\'t find a pen. Try again later.')
+            // Super nasty, but jfs (the json file system underneath the botkit data store)
+            // does not report whether data could not be found because it doesn't exist, or an error happened on the file system
+            // Just assume for now that errors mean (no data)
+
+            convo.setVar('userData', { id: message.user, topics: []})
+            convo.setVar('teamData', { id: message.team, topics: []})
+            convo.activate()
+        })
+
+        askUsersToNag(response, convo)
+    })
+
 })
 
 const messages = {
@@ -154,6 +175,7 @@ function recapOptions(response, convo) {
         } else if (answer.match(bot.utterances.yes)){
             convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
             convo.say('I\'m sure I\'ll learn soon enough. Thanks for trying me out!')
+            saveTopic(response, convo)
         } else {
             convo.say('I\'m sorry, I didn\'t quite get that. Please speak in simpler terms.')
             convo.repeat()
@@ -161,6 +183,49 @@ function recapOptions(response, convo) {
         convo.next()
     })
 }
+
+function saveTopic(response, convo) {
+    let users = getUsers(convo.extractResponse(messages.askUsersToNag))
+    let date = parseDate(convo.extractResponse(messages.askDeadline))
+    let message = convo.extractResponse(messages.askMessageToNagAbout)
+    let owner = convo.source_message.user
+    let topic = {
+        id: uuid(),
+        message: message,
+        owner: owner,
+        deadline: date,
+        users: users,
+        respondedUsers: []
+    }
+    let userData = convo.vars['userData']
+    let teamData = convo.vars['teamData']
+    userData.topics.push(topic)
+    teamData.topics.push(topic)
+    controller.storage.users.save(userData, function ignored(err) {  });
+    controller.storage.teams.save(teamData, function ignored(err) {  });
+    convo.say('I\'ve now saved the topic for scheduling')
+}
+
+function getUserData(userId) {
+    return new Promise((resolve, reject) => {
+        controller.storage.users.get(userId, (err, user_data) => {
+            if(err) {
+                reject(err)
+            } else resolve(user_data)
+        })
+    })
+}
+
+function getTeamData(teamId) {
+    return new Promise((resolve, reject) => {
+        controller.storage.teams.get(teamId, (err, user_data) => {
+            if(err) {
+                reject(err)
+            } else resolve(user_data)
+        })
+    })
+}
+
 
 function formatUptime(uptime) {
     var unit = 'second'

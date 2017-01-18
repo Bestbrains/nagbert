@@ -34,8 +34,13 @@ Service is for now intended to be deployed by you, somewhere you control.
  2. ~~Extract user names from input & validate~~
 3. ~~Repeat back the settings to the user starting the nag~~
 4. Make confirm Y/n buttons
-5. Save a finalized nagging topic to team level json storage'
+5. ~~Save a finalized nagging topic to team level json storage~~
 
 6. Make a scheduled job with the nagging topics
 7. Start conversation with nagees and notify the nagger who has been nagged
 8. Make confirm y/n buttons for nagees to let nagbert know they've completed their task.
+
+9. Make the "list current nag topics" function
+    1. user
+    2. team
+    3. Pretty formatting of stuff like the owner etc.
