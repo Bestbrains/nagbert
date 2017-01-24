@@ -92,7 +92,7 @@ function askUsersToNag(response, convo) {
         let users = convo.extractResponse(messages.askUsersToNag)
 
         if (!validUserSequence(users)) {
-            convo.say("Are you sure you tagged the users?")
+            convo.say('Are you sure you tagged the users?')
             convo.repeat()
         } else {
             convo.say('Will nag: ' + humanReadableUserList(users));
@@ -151,7 +151,7 @@ function getUsers(users) {
 
 function humanReadableUserList(users) {
     let userlist = getUsers(users)
-    if(userlist === null) {
+    if (userlist === null) {
         return ''
     }
     return userlist.join(', ')
@@ -170,9 +170,9 @@ function recapOptions(response, convo) {
     }
     convo.ask(messages.recapOptions, (response, convo) => {
         let answer = convo.extractResponse(messages.recapOptions)
-        if(answer.match(bot.utterances.no)) {
-            convo.say("Alright. I won't start nagging just yet. Say 'nag' to go through this process again with your changes.")
-        } else if (answer.match(bot.utterances.yes)){
+        if (answer.match(bot.utterances.no)) {
+            convo.say('Alright. I won\'t start nagging just yet. Say \'nag\' to go through this process again with your changes.')
+        } else if (answer.match(bot.utterances.yes)) {
             convo.say('Alright! For now, please remind them yourself. I haven\'t learned to initiate nagging yet.')
             convo.say('I\'m sure I\'ll learn soon enough. Thanks for trying me out!')
             saveTopic(response, convo)
@@ -197,8 +197,8 @@ function saveTopic(response, convo) {
         users: users,
         respondedUsers: []
     }
-    let userData = convo.vars['userData']
-    let teamData = convo.vars['teamData']
+    let userData = convo.vars.userData
+    let teamData = convo.vars.teamData
     userData.topics.push(topic)
     teamData.topics.push(topic)
     controller.storage.users.save(userData, function ignored(err) {  });
@@ -209,7 +209,7 @@ function saveTopic(response, convo) {
 function getUserData(userId) {
     return new Promise((resolve, reject) => {
         controller.storage.users.get(userId, (err, user_data) => {
-            if(err) {
+            if (err) {
                 reject(err)
             } else resolve(user_data)
         })
@@ -219,7 +219,7 @@ function getUserData(userId) {
 function getTeamData(teamId) {
     return new Promise((resolve, reject) => {
         controller.storage.teams.get(teamId, (err, user_data) => {
-            if(err) {
+            if (err) {
                 reject(err)
             } else resolve(user_data)
         })
