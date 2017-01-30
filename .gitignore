@@ -41,3 +41,5 @@ _secret.json
 
 # Json file store
 topics/*
+
+dist/*
