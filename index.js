@@ -1,6 +1,6 @@
 'use strict'
 
-const secret = require('./_secret.json')
+const secret = require(__dirname + '/_secret.json')
 const uuid = require('uuid/v4')
 
 if (!secret.token) {
@@ -15,7 +15,7 @@ const moment = require('moment')
 const controller = Botkit.slackbot({
     debug: true,
     stats_optout: true,
-    json_file_store: './topics'
+    json_file_store: __dirname + '/topics'
 })
 
 const bot = controller.spawn({

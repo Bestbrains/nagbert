@@ -1,0 +1,14 @@
+[Unit]
+Description=Nagbert slack bot
+After=network.target
+Documentation=https://github.com/Bestbrains/nagbert
+
+[Service]
+User=ubuntu
+Type=simple
+ExecStart=/usr/bin/nodejs /home/ubuntu/nagbert/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+Alias=nagbert.service
