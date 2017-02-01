@@ -15,6 +15,7 @@ Nagbert responds to the following commands in slack:
 
 *Hi* - Nagbert will introduce himself and display a list of commands
 *nag* - Nagbert will initiate a conversation to begin a nagging topic
+*Who are you* - Nagbert will provide some personal information.
 
 # Token
 
