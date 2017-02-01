@@ -10,6 +10,7 @@ before_deploy:
 - eval "$(ssh-agent -s)"
 - chmod 600 travis_rsa
 - ssh-add travis_rsa
+- echo $knownhost
 
 deploy:
   - provider: script
