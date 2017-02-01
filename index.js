@@ -1,6 +1,8 @@
 'use strict'
 
 const secret = require(__dirname + '/_secret.json')
+const info = require(__dirname + '/_info.json')
+
 const uuid = require('uuid/v4')
 
 if (!secret.token) {
@@ -52,7 +54,7 @@ controller.hears(['uptime', 'identify yourself', 'who are you', 'what is your na
 
         bot.reply(message,
             ':robot_face: I am a bot named <@' + bot.identity.name +
-             '>. I have been running for ' + uptime + ' on ' + hostname + '.')
+             '>. I have been running for ' + uptime + ' on ' + hostname + ' as build number ' + info.build + '.')
 
     })
 

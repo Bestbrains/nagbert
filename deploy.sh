@@ -4,7 +4,7 @@ if [ ! -d "dist" ]; then
 fi
 : ${deploytarget:=nagbert}
 
-tar -zcf dist/nagbert.tar.gz node_modules index.js package.json
+tar -zcf dist/nagbert.tar.gz node_modules index.js package.json _info.json
 echo 'Wrote package dist/nagbert.tar.gz'
 
 scp dist/nagbert.tar.gz ${deploytarget}:.
