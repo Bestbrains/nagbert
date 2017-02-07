@@ -58,6 +58,38 @@ controller.hears(['uptime', 'identify yourself', 'who are you', 'what is your na
 
     })
 
+controller.hears(['list'], 'direct_message,direct_mention,mention', (bot, message) => {
+    bot.reply(message, 'Alright, let me search through this stack of papers...')
+    bot.createConversation(message, (response, convo) => {
+        getUserData(message.user).then((userData) => {
+            convo.activate()
+
+            let topicCount = userData.topics.length
+            let activeTopicCount = getActiveTopics(userData.topics).length
+            convo.say('Whew, you\'re one tough cookie. I found ' + topicCount + ' nag topics. However, only ' + activeTopicCount + ' of them are active.')
+            let prettyPrintedTopics = prettyPrintTopics(userData.topics)
+            convo.say(prettyPrintedTopics)
+            convo.next()
+        })
+    })
+})
+
+controller.hears(['teamstatus'], 'direct_message,direct_mention,mention', (bot, message) => {
+    bot.reply(message, 'Uhhh.. Are you sure? It\'s kind of a secret.\nAlright, let me search through this stack of papers...')
+    bot.createConversation(message, (response, convo) => {
+        getTeamData(message.team).then((teamData) => {
+            convo.activate()
+
+            let topicCount = teamData.topics.length
+            let activeTopicCount = getActiveTopics(teamData.topics).length
+            convo.say('Whew, you guys are ACTIVE. I found ' + topicCount + ' nag topics. However, only ' + activeTopicCount + ' of them are active.')
+            let prettyPrintedTopics = prettyPrintTopics(teamData.topics)
+            convo.say(prettyPrintedTopics)
+            convo.next()
+        })
+    })
+})
+
 controller.hears(['nag'], 'direct_message,direct_mention,mention', (bot, message) => {
     bot.reply(message, 'Great! I can\'t wait to get started. Let me just get a pen...')
     bot.createConversation(message, (response, convo) => {
@@ -160,6 +192,29 @@ function humanReadableUserList(users) {
         return ''
     }
     return userlist.join(', ')
+}
+
+function getActiveTopics(topics) {
+    if (topics.length === 0) {
+        return []
+    }
+    return topics.filter((topic) => {
+        return topic.deadline == null || parseDate(topic.deadline).endOf('day').isAfter(getToday)
+    })
+}
+
+function prettyPrintTopics(topics) {
+    let activeTopics = getActiveTopics(topics)
+    if (activeTopics.length === 0) {
+        return 'You have no active topics :-( How about starting one?'
+    }
+    return activeTopics.map((topic) => {
+        let deadline = topic.deadline?
+            humanReadableDate(parseDate(topic.deadline))
+            : 'No deadline'
+
+        return '*\t' + deadline + ': ' + topic.message + '\n\t - Involving: ' + topic.users.join(', ') + ' - Owned by: <@' + topic.owner + '>'
+    }).join('\n ')
 }
 
 function recapOptions(response, convo) {
