@@ -119,17 +119,20 @@ function askDeadline(response, convo) {
         if (dateResponse.match(bot.utterances.no) || validDate(dateResponse)) {
             recapOptions(response, convo)
         } else {
-            convo.say('Please ensure the date is valid and set in the future. Today is: ' + humanReadableDate(today))
+            convo.say('Please ensure the date is valid and set in the future. Today is: ' + humanReadableDate(getToday()))
             askDeadline(response, convo)
         }
         convo.next()
     })
 }
 
-let today = moment().startOf('day')
+function getToday() {
+    return moment().startOf('day')
+}
+
 function validDate(date) {
     let deadline = parseDate(date)
-    return deadline.isValid() && deadline.endOf('day').isAfter(today)
+    return deadline.isValid() && deadline.endOf('day').isAfter(getToday())
 }
 const dateFormats = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY']
 function parseDate(dateString) {
