@@ -199,7 +199,7 @@ function getActiveTopics(topics) {
         return []
     }
     return topics.filter((topic) => {
-        return topic.deadline == null || parseDate(topic.deadline).endOf('day').isAfter(getToday)
+        return topic.deadline == null || moment(topic.deadline).endOf('day').isAfter(getToday())
     })
 }
 
@@ -210,7 +210,7 @@ function prettyPrintTopics(topics) {
     }
     return activeTopics.map((topic) => {
         let deadline = topic.deadline?
-            humanReadableDate(parseDate(topic.deadline))
+            humanReadableDate(moment(topic.deadline))
             : 'No deadline'
 
         return '*\t' + deadline + ': ' + topic.message + '\n\t - Involving: ' + topic.users.join(', ') + ' - Owned by: <@' + topic.owner + '>'
