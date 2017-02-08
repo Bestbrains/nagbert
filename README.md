@@ -30,20 +30,19 @@ The token is a slack bot user token created in the team you wish to apply this b
 Service is for now intended to be deployed by you, somewhere you control.
 
 # TODO
+* Make confirm Y/n buttons
+* Make a scheduled job with the nagging topics
+* Start conversation with nagees and notify the nagger who has been nagged
+* Make confirm y/n buttons for nagees to let nagbert know they've completed their task.
 
-1. ~~Extract responses from conversation steps~~
-2. ~~React according to responses~~
- 1. ~~Extract date and validate~~
- 2. ~~Extract user names from input & validate~~
-3. ~~Repeat back the settings to the user starting the nag~~
-4. Make confirm Y/n buttons
-5. ~~Save a finalized nagging topic to team level json storage~~
-
-6. Make a scheduled job with the nagging topics
-7. Start conversation with nagees and notify the nagger who has been nagged
-8. Make confirm y/n buttons for nagees to let nagbert know they've completed their task.
-
-9. Make the "list current nag topics" function
-    1. user
-    2. team
-    3. Pretty formatting of stuff like the owner etc.
+* ~~Extract responses from conversation steps~~
+* ~~React according to responses~~
+ * ~~Extract date and validate~~
+ * ~~Extract user names from input & validate~~
+* ~~Repeat back the settings to the user starting the nag~~
+* ~~Save a finalized nagging topic to team level json storage~~
+* ~~Save a finalized nagging topic to team level json storage~~
+* ~~Make the "list current nag topics" function~~
+ * ~~user~~
+ * ~~team~~
+ * ~~Pretty formatting of stuff like the owner etc.~~
