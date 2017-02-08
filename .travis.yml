@@ -13,6 +13,8 @@ before_deploy:
 - ssh-add travis_rsa
 - echo '{"build":"'$TRAVIS_BUILD_NUMBER'"}' > _info.json
 - ssh-keyscan -t rsa -H $knownhost >> ~/.ssh/known_hosts 2>&1
+- ssh-keyscan -t rsa -H $knownhost_ip >> ~/.ssh/known_hosts 2>&1
+
 
 deploy:
   - provider: script
